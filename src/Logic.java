@@ -2,8 +2,42 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Logic {
+    static  int SIZE;
+    static  int SIZEWIN;
+    static final char DOT_X = 'X';
+    static final char DOT_O = 'O';
+    static final char DOT_EMPTY = '.';
+    static char[][] map;
+
+    static Random random = new Random();
+    static boolean isFinished;
+
+    public static void  go() {
+        isFinished = true;
+    printMap();
+        if(Logic.checkWin(Logic.DOT_X)) {
+            System.out.println("Ты победил");
+            return;
+        }
+        if(Logic.isFull()) {
+            System.out.println("Ничья");
+            return;
+        }
 
 
+        Logic.aiTurn();
+        Logic.printMap();
+        if(Logic.checkWin(Logic.DOT_O)) {
+            System.out.println("Компьютер победил");
+            return;
+        }
+        if(Logic.isFull()) {
+            System.out.println("Ничья");
+            return;
+
+    }
+        isFinished = false;
+}
 /**
  initMap();
  printMap();
@@ -43,14 +77,7 @@ public class Logic {
      * 3. * Попробовать переписать логику проверки победы, чтобы она работала для поля 5х5 и количества фишек 4. Очень желательно не делать это просто набором условий для каждой из возможных ситуаций;
      * 4. *** Доработать искусственный интеллект, чтобы он мог блокировать ходы игрока.
      */
-    static  final int SIZE = 5;
-    static  final int SIZEWIN = 2;
-    static final char DOT_X = 'X';
-    static final char DOT_O = 'O';
-    static final char DOT_EMPTY = '.';
-    static char[][] map;
-    static Scanner sc = new Scanner(System.in);
-    static Random random = new Random();
+
 
     public static void initMap() {
         map = new char[SIZE][SIZE];
@@ -74,14 +101,17 @@ public class Logic {
             System.out.println();
         }
     }
-    public static void humanTurn() {
-        int x,y;
-        do {
-            System.out.println("Input X, Y");
-            x = sc.nextInt() - 1;
-            y = sc.nextInt() - 1;
-        } while (!isCelValid(y,x));
-        map[y][x] = DOT_X;
+    public static void humanTurn(int x,int y) {
+        if (isCelValid(y,x)) {
+            map[y][x] = DOT_X;
+            go();
+        }
+ //       do {
+ //           System.out.println("Input X, Y");
+ //           x = sc.nextInt() - 1;
+ //           y = sc.nextInt() - 1;
+ //       } while (!isCelValid(y,x));
+ //       map[y][x] = DOT_X;
     }
 
     public static boolean isCelValid(int y, int x) {
