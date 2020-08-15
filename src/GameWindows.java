@@ -13,7 +13,7 @@ public class GameWindows extends JFrame {
     public GameWindows () {
         setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_HEIGHT, WINDOW_WIDTH);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Крестики-Нолики от Гарегина Папяна (с.Мовсес)");
+        setTitle("Крестики-Нолики от Гарегина Папяна (с.Мовсес) !!!!");
 
         settingWindow = new SettingWindow(this);
         battleMap = new BattleMap(this);
