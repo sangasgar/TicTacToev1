@@ -2,199 +2,248 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Logic {
-    static  int SIZE;
-    static  int SIZEWIN;
+    static int SIZE;
+    static int DOTS_TO_WIN;
+
     static final char DOT_X = 'X';
     static final char DOT_O = 'O';
     static final char DOT_EMPTY = '.';
+    static int STATUSAI = 0;
+    private static int user;
+
+
     static char[][] map;
 
     static Random random = new Random();
+
     static boolean isFinished;
 
-    public static void  go() {
+    public static void go() {
         isFinished = true;
+
     printMap();
-        if(Logic.checkWin(Logic.DOT_X)) {
-            System.out.println("Ты победил");
-            return;
-        }
-        if(Logic.isFull()) {
-            System.out.println("Ничья");
-            return;
-        }
+    if (checkWinLines(DOT_X)) {
+        System.out.println("Ты победил! ");
+        STATUSAI = 1;
 
+        return;
+    }
+    if (isFull()) {
+        System.out.println("Ничья!");
+        STATUSAI = 3;
+        return;
+    }
 
-        Logic.aiTurn();
-        Logic.printMap();
-        if(Logic.checkWin(Logic.DOT_O)) {
-            System.out.println("Компьютер победил");
-            return;
-        }
-        if(Logic.isFull()) {
-            System.out.println("Ничья");
-            return;
+    aiTurn();
+    printMap();
+    if (checkWinLines(DOT_O)) {
+        System.out.println("Компьютер победил! ");
+        STATUSAI = 2;
+        return;
+    }
+    if (isFull()) {
+        System.out.println("Ничья!");
+        STATUSAI = 3;
+        return;
+    }
+
+    isFinished = false;
+
 
     }
+
+    public static void go1() {
+        isFinished = true;
+
+        printMap();
+        if (checkWinLines(DOT_X)) {
+            System.out.println("Победил игрок 1! ");
+            STATUSAI = 1;
+            return;
+        }
+        if (isFull()) {
+            System.out.println("Ничья!");
+            STATUSAI = 3;
+            return;
+        }
+
+        printMap();
+        if (checkWinLines(DOT_O)) {
+            System.out.println("Победил игрок 2! ");
+            STATUSAI = 4;
+            return;
+        }
+        if (isFull()) {
+            System.out.println("Ничья!");
+            STATUSAI = 3;
+            return;
+        }
+
         isFinished = false;
-}
-/**
- initMap();
- printMap();
-
- while (true) {
- System.out.println("Введите значение ячеек");
- Logic.humanTurn();
- Logic.printMap();
- if(Logic.checkWin(Logic.DOT_X)) {
- System.out.println("Ты победил");
- break;
- }
- if(Logic.isFull()) {
- System.out.println("Ничья");
- break;
- }
 
 
- Logic.aiTurn();
- Logic.printMap();
- if(Logic.checkWin(Logic.DOT_O)) {
- System.out.println("Компьютер победил");
- break;
- }
- if(Logic.isFull()) {
- System.out.println("Ничья");
- break;
- }
- }
-
- */
+    }
 
 
-    /**
-     * 1. Полностью разобраться с кодом, попробовать переписать с нуля, стараясь не подглядывать в методичку;
-     * 2. Переделать проверку победы, чтобы она не была реализована просто набором условий, например, с использованием циклов.
-     * 3. * Попробовать переписать логику проверки победы, чтобы она работала для поля 5х5 и количества фишек 4. Очень желательно не делать это просто набором условий для каждой из возможных ситуаций;
-     * 4. *** Доработать искусственный интеллект, чтобы он мог блокировать ходы игрока.
-     */
 
 
     public static void initMap() {
         map = new char[SIZE][SIZE];
-        for (int i =0; i < SIZE; i++) {
-            for (int j=0; j <SIZE; j++) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 map[i][j] = DOT_EMPTY;
             }
         }
     }
+
     public static void printMap() {
         System.out.print("  ");
         for (int i = 0; i < SIZE; i++) {
             System.out.print(i + 1 + " ");
         }
         System.out.println();
-        for (int i = 0; i <SIZE; i++){
+        for (int i = 0; i < SIZE; i++) {
             System.out.print(i + 1 + " ");
-            for (int j = 0; j < SIZE; j ++) {
+            for (int j = 0; j < SIZE; j++) {
                 System.out.print(map[i][j] + " ");
             }
             System.out.println();
         }
     }
-    public static void humanTurn(int x,int y) {
-        if (isCelValid(y,x)) {
+
+    public static void humanTurn(int x, int y) {
+        if(isCellValid(y, x)){
             map[y][x] = DOT_X;
             go();
         }
- //       do {
- //           System.out.println("Input X, Y");
- //           x = sc.nextInt() - 1;
- //           y = sc.nextInt() - 1;
- //       } while (!isCelValid(y,x));
- //       map[y][x] = DOT_X;
     }
 
-    public static boolean isCelValid(int y, int x) {
-        if (x<0 || y<0 || x >=SIZE || y>=SIZE) {
+    public static void humanTurnUser(int x, int y) {
+        if (user == 0) {
+            if(isCellValid(y, x)){
+                map[y][x] = DOT_X;
+                go1();
+                user = 1;
+            }
+        }
+        if (user == 1) {
+            if(isCellValid(y, x)){
+                map[y][x] = DOT_O;
+                go1();
+                user = 0;
+            }
+        }
+
+    }
+
+
+    public static boolean isCellValid(int y, int x) {
+        if (x < 0 || y < 0 || x >= SIZE || y >= SIZE) {
             return false;
         }
         return map[y][x] == DOT_EMPTY;
     }
+
     public static void aiTurn() {
-        int x,y;
+        int x, y;
+// Попытка победить самому
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (isCellValid(i, j)) {
+                    map[i][j] = DOT_O;
+                    if (checkWinLines(DOT_O)) {
+                        return;
+                    }
+                    map[i][j] = DOT_EMPTY;
+                }
+            }
+        }
+// Сбить победную линии противника, если осталось 1 ход для победы
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (isCellValid(i, j)) {
+                    map[i][j] = DOT_X;
+                    if (checkWinLines(DOT_X)) {
+                        map[i][j] = DOT_O;
+                        return;
+                    }
+                    map[i][j] = DOT_EMPTY;
+                }
+            }
+        }
+
+// Сбить победную линии противника, если осталось 2 хода для победы
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (isCellValid(i, j)) {
+                    map[i][j] = DOT_X;
+                    if (checkWinLines(DOT_X, DOTS_TO_WIN - 1) &&
+                            Math.random() < 0.5) { //  фактор случайности, чтобы сбивал не все время первый попавшийся путь.
+                        map[i][j] = DOT_O;
+                        return;
+                    }
+                    map[i][j] = DOT_EMPTY;
+                }
+            }
+        }
+
+// Сходить в произвольную не занятую ячейку
         do {
             x = random.nextInt(SIZE);
             y = random.nextInt(SIZE);
-        } while (!isCelValid(y,x));
+        } while (!isCellValid(y, x));
+
         map[y][x] = DOT_O;
     }
 
     public static boolean isFull() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                if(map[i][j] == DOT_EMPTY) {
+                if (map[i][j] == DOT_EMPTY) {
                     return false;
                 }
             }
-
         }
         return true;
     }
-    public static boolean checkWin(char c) {
 
-        int score = 0;
-        for (int i = 0; i < SIZEWIN; i++) {
-            for (int j = 0; j < SIZEWIN; j ++) {
-                if (map[i][j] == c) {
-                    score += 1;
 
+    static boolean checkLine(int cy, int cx, int vy, int vx, char dot) {
+        return checkLine(cy, cx, vy, vx, dot, DOTS_TO_WIN);
+    }
+
+    static boolean checkWinLines(char dot) {
+        return checkWinLines(dot, DOTS_TO_WIN);
+    }
+
+
+    static boolean checkLine(int cy, int cx, int vy, int vx, char dot, int dotsToWin) {
+        if (cx + vx * (dotsToWin - 1) > SIZE - 1 || cy + vy * (dotsToWin - 1) > SIZE - 1 ||
+                cy + vy * (dotsToWin - 1) < 0) {
+            return false;
+        }
+
+        for (int i = 0; i < dotsToWin; i++) {
+            if (map[cy + i * vy][cx + i * vx] != dot) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static boolean checkWinLines(char dot, int dotsToWin) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (checkLine(i, j, 0, 1, dot, dotsToWin) ||
+                        checkLine(i, j, 1, 0, dot, dotsToWin) ||
+                        checkLine(i, j, 1, 1, dot, dotsToWin) ||
+                        checkLine(i, j, -1, 1, dot, dotsToWin)) {
+                    return true;
                 }
             }
-            if (score == SIZEWIN) {
-                return true;
-            } else {
-                score = 0;
-            }
-        }
-
-        for (int i = 0; i < SIZEWIN; i++) {
-            for (int j = 0; j < SIZEWIN; j ++) {
-                if (map[j][i] == c) {
-                    score += 1;
-
-                }
-            }
-            if (score == SIZEWIN) {
-                return true;
-            } else {
-                score = 0;
-            }
-        }
-
-
-        for (int i = 0; i < SIZEWIN; i++) {
-            if (map[i][i]== c) {
-                score += 1;
-            }
-        }
-        if (score == SIZEWIN) {
-            return true;
-        } else {
-            score = 0;
-        }
-
-
-        for (int i = 0, j = SIZE-1; i < SIZE && j < SIZE; i++, j --) {
-            if (map[j][i] == c) {
-                score += 1;
-            }
-        }
-        if (score == SIZE) {
-            return true;
-        } else {
-            score = 0;
         }
         return false;
     }
-}
 
+
+}

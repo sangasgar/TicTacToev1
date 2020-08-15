@@ -8,6 +8,8 @@ public class GameWindows extends JFrame {
     static final int WINDOW_WIDTH= 600;
     private SettingWindow settingWindow;
     private BattleMap battleMap;
+
+
     public GameWindows () {
         setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_HEIGHT, WINDOW_WIDTH);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -15,8 +17,9 @@ public class GameWindows extends JFrame {
 
         settingWindow = new SettingWindow(this);
         battleMap = new BattleMap(this);
-        add(battleMap,BorderLayout.CENTER);
 
+
+        add(battleMap,BorderLayout.CENTER);
         JPanel pane1 = new JPanel(new GridLayout(1,2));
 
         JButton buttonOk = new JButton("Начать новую игру");
@@ -32,8 +35,12 @@ public class GameWindows extends JFrame {
         });
         buttonOk.addActionListener(e -> {
             settingWindow.setVisible(true);
+
         });
+
         setVisible(true);
+
+
     }
     public void startNewGame(int mode, int fieldSize, int winningLength) {
        battleMap.startNewGame(mode, fieldSize, winningLength);

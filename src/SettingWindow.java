@@ -11,6 +11,7 @@ public class SettingWindow extends JFrame {
     private static final int MAX_FIELD_SIZE = 10;
     static final int GAME_MODE_H_VS_A = 0;
     static final int GAME_MODE_H_VS_H = 1;
+    static int mode;
 
     private JRadioButton jrbHumanVsAi;
     private JRadioButton jrbHumanVsHuman;
@@ -54,7 +55,6 @@ public class SettingWindow extends JFrame {
         JButton buttonStartGame = new JButton("Начать игру");
         add(buttonStartGame);
         buttonStartGame.addActionListener(e -> {
-            int mode;
            if(jrbHumanVsAi.isSelected()) {
                mode = GAME_MODE_H_VS_A; }
            else {
@@ -63,7 +63,7 @@ public class SettingWindow extends JFrame {
            int fieldSize = jsFieldSize.getValue();
            int winningLength = jsWinningLenght.getValue();
            Logic.SIZE = fieldSize;
-           Logic.SIZEWIN = winningLength;
+           Logic.DOTS_TO_WIN = winningLength;
            Logic.initMap();
            Logic.isFinished = false;
 
